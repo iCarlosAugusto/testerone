@@ -1,0 +1,64 @@
+# ============================================================
+# Docker Ignore for NestJS + Prisma
+# Excludes unnecessary files from Docker build context
+# ============================================================
+
+# Dependencies (will be installed fresh in container)
+node_modules
+npm-debug.log
+yarn-error.log
+bun.lock
+
+# Build outputs (will be built in container)
+dist
+
+# Git
+.git
+.gitignore
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Environment files (sensitive data - inject at runtime)
+.env
+.env.*
+!.env.example
+
+# Test files
+test
+*.spec.ts
+*.test.ts
+coverage
+.nyc_output
+
+# Documentation
+README.md
+docs
+*.md
+!package.json
+
+# Development tools
+.eslintrc*
+.prettierrc*
+eslint.config.*
+jest.config.*
+tsconfig.*.json
+
+# Bruno API collection (development only)
+TesterOne-
+
+# Prisma migrations (optional - uncomment if not needed in production)
+# prisma/migrations
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp
+temp
+.cache
