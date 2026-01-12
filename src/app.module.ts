@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './projects/project.module';
+import { EvaluationModule } from './evaluations/evaluation.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { ProjectModule } from './projects/project.module';
         SupabaseModule,
         AuthModule,
         ProjectModule,
+        EvaluationModule,
     ],
     controllers: [AppController],
     providers: [

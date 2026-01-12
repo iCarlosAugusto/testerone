@@ -1,12 +1,12 @@
 meta {
-  name: Get All Projects
+  name: Create Evaluation
   type: http
-  seq: 3
+  seq: 1
 }
 
-get {
-  url: http://localhost:3000/projects
-  body: none
+post {
+  url: http://localhost:3000/evaluations
+  body: json
   auth: inherit
 }
 
@@ -16,8 +16,22 @@ headers {
 
 body:json {
   {
-    "name": "Teste (EDITADO)",
-    "description": "TESTE"
+    "title": "Teste MVP",
+    "description": "Venha testar o meu app em fase MVP",
+    "instructions": "Teste como um usuário real",
+    "projectId": "3eda22b6-194e-4f50-bd69-19d71ed749ca",
+    "questions": [
+      {
+        "text": "Primeiras impressões do App",
+        "type": "TEXT",
+        "required": true
+      },
+      {
+        "text": "O app é facil de usar?",
+        "type": "TEXT",
+        "required": true
+      }
+    ]
   }
 }
 

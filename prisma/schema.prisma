@@ -22,16 +22,19 @@ model Account {
 }
 
 model User {
-  id             String          @id @default(uuid())
-  supabaseId     String          @unique @map("supabase_id")
-  email          String          @unique
-  role           Role
-  accountId      String          @map("account_id")
-  account        Account         @relation(fields: [accountId], references: [id])
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
-  ownedProjects  Project[]       @relation("ProjectOwner")
-  projectMembers ProjectMember[]
+  id                       String                  @id @default(uuid())
+  supabaseId               String                  @unique @map("supabase_id")
+  email                    String                  @unique
+  role                     Role
+  accountId                String                  @map("account_id")
+  account                  Account                 @relation(fields: [accountId], references: [id])
+  createdAt                DateTime                @default(now()) @map("created_at")
+  updatedAt                DateTime                @updatedAt @map("updated_at")
+  ownedProjects            Project[]               @relation("ProjectOwner")
+  projectMembers           ProjectMember[]
+  createdEvaluations       Evaluation[]            @relation("EvaluationCreator")
+  evaluationParticipations EvaluationParticipant[]
+  evaluationResponses      EvaluationResponse[]
 
   @@index([accountId])
   @@map("users")
@@ -47,6 +50,7 @@ model Project {
   ownerId     String          @map("owner_id")
   owner       User            @relation("ProjectOwner", fields: [ownerId], references: [id])
   members     ProjectMember[]
+  evaluations Evaluation[]
   createdAt   DateTime        @default(now()) @map("created_at")
   updatedAt   DateTime        @updatedAt @map("updated_at")
   deletedAt   DateTime?       @map("deleted_at")
@@ -76,4 +80,87 @@ enum ProjectStatus {
   TESTING
   COMPLETED
   ARCHIVED
+}
+
+// ============================================================
+// EVALUATION SYSTEM
+// ============================================================
+
+model Evaluation {
+  id           String                  @id @default(uuid())
+  title        String
+  description  String?
+  instructions String?                 @db.Text // Markdown support
+  status       EvaluationStatus        @default(DRAFT)
+  projectId    String                  @map("project_id")
+  project      Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdById  String                  @map("created_by_id")
+  createdBy    User                    @relation("EvaluationCreator", fields: [createdById], references: [id])
+  accountId    String                  @map("account_id") // For multi-tenant queries
+  questions    EvaluationQuestion[]
+  participants EvaluationParticipant[]
+  createdAt    DateTime                @default(now()) @map("created_at")
+  updatedAt    DateTime                @updatedAt @map("updated_at")
+
+  @@index([projectId])
+  @@index([accountId])
+  @@index([createdById])
+  @@map("evaluations")
+}
+
+enum EvaluationStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+}
+
+model EvaluationQuestion {
+  id           String               @id @default(uuid())
+  text         String
+  type         QuestionType
+  required     Boolean              @default(true)
+  order        Int                  @default(0)
+  evaluationId String               @map("evaluation_id")
+  evaluation   Evaluation           @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  responses    EvaluationResponse[]
+  createdAt    DateTime             @default(now()) @map("created_at")
+
+  @@index([evaluationId])
+  @@map("evaluation_questions")
+}
+
+enum QuestionType {
+  BOOLEAN
+  TEXT
+  RATING // 1-5 scale
+}
+
+model EvaluationParticipant {
+  id           String     @id @default(uuid())
+  evaluationId String     @map("evaluation_id")
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  userId       String     @map("user_id")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt     DateTime   @default(now()) @map("joined_at")
+  completedAt  DateTime?  @map("completed_at")
+
+  @@unique([evaluationId, userId])
+  @@index([evaluationId])
+  @@index([userId])
+  @@map("evaluation_participants")
+}
+
+model EvaluationResponse {
+  id          String             @id @default(uuid())
+  answer      Json // Flexible: { value: true }, { value: "text" }, { value: 4 }
+  questionId  String             @map("question_id")
+  question    EvaluationQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  userId      String             @map("user_id")
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submittedAt DateTime           @default(now()) @map("submitted_at")
+
+  @@unique([questionId, userId]) // One answer per question per user
+  @@index([questionId])
+  @@index([userId])
+  @@map("evaluation_responses")
 }

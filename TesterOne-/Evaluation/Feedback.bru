@@ -1,0 +1,35 @@
+meta {
+  name: Feedback
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:3000/evaluations/0c9e731c-b887-442c-bb66-e8b010adf6c4/feedback
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjlkNjY2MTdjLTQ2M2QtNDllNS04YzMyLWEwMjA2OGQ2NjhkYyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3NlaXdrYXV1a2ZlaHdva2lubHpkLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI3Mzc4MGQ0NS05ODBmLTQxMGYtYThjZC0xMmMyYzAwMTczMzgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY4MjYzMTcyLCJpYXQiOjE3NjgyNTk1NzIsImVtYWlsIjoidXN1YXJpb3Rlc3RlckB0ZXN0ZS5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImFjY291bnRJZCI6ImNlNTJjYzczLTJjNjYtNGMzNS1hZjk4LTlhNmY0YzhhOGI1MSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJyb2xlIjoiVEVTVEVSIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjgyNTk1NzJ9XSwic2Vzc2lvbl9pZCI6ImViNDUzNzIwLTNhYzgtNDA1Zi1hYTE0LWQ3YTkxNDYxNTVlMyIsImlzX2Fub255bW91cyI6ZmFsc2V9.ELBbJWwB9tbLhxFrKiTLatrhlpjuyZmDcxwiUU6rkt4Bro4F-fAIpraFC9vblGzJAlto1SbfuMwBFqvHa22Bsg
+}
+
+body:json {
+  {
+    "responses": [
+      {
+        "questionId": "4e01d195-dbb7-4c39-942e-afa845d5b3b4",
+        "answer": "App bom no geral"
+      },
+      {
+        "questionId": "8d4697cc-eba9-46f3-8163-f8f10bd8ce72",
+        "answer": "Sim, app bem fácil de usar"
+      }    
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
