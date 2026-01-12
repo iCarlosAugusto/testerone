@@ -1,0 +1,27 @@
+meta {
+  name: Edit Project
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:3000/projects/8f94135d-6056-401b-8024-24cb70a33416
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjlkNjY2MTdjLTQ2M2QtNDllNS04YzMyLWEwMjA2OGQ2NjhkYyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3NlaXdrYXV1a2ZlaHdva2lubHpkLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2ZjZmNWVhMS1mMDgwLTQxMjItOTViMi05NDgwMmZiMDAwZTIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY4MjU4NzYyLCJpYXQiOjE3NjgyNTUxNjIsImVtYWlsIjoidGVzdGUyQHRlc3RlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiYWNjb3VudElkIjoiN2Q4YzZlYzUtMzU2Mi00NzBmLTgxZjgtNWMyNDhhOGY3NzAzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGUiOiJGT1VOREVSIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjgyNTUxNjJ9XSwic2Vzc2lvbl9pZCI6ImI5YWM2ZWU4LWJlMmItNDBmOC1hODA5LTJjN2RkODkwNzJjMSIsImlzX2Fub255bW91cyI6ZmFsc2V9.GmtGguXPVzY8aF0C7cOsCcCScArb1k3G8r0udS5D6ylIV8kDgYMnnjG1QaZdsE_qEtZow07UDpfVXW-pGB-B1Q
+}
+
+body:json {
+  {
+    "name": "Teste (EDITADO)",
+    "description": "TESTE"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
