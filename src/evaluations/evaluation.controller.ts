@@ -51,6 +51,30 @@ export class EvaluationController {
     }
 
     /**
+     * List evaluations for a tester (TESTER only)
+     * Supports filtering by status: PENDING, ACCEPTED, REJECTED
+     * Returns list + counts for each status
+     */
+    @Get('my-evaluations')
+    @Roles(Role.TESTER)
+    async findTesterEvaluations(
+        @CurrentUser() user: AuthenticatedUser,
+        @Query('status') status?: 'PENDING' | 'ACCEPTED' | 'REJECTED',
+        @Query('skip') skip?: string,
+        @Query('take') take?: string,
+    ) {
+        const options: PaginationOptions = {
+            skip: skip ? parseInt(skip, 10) : 0,
+            take: take ? parseInt(take, 10) : 20,
+        };
+        return this.evaluationService.findTesterEvaluations(
+            toTenantContext(user),
+            status,
+            options,
+        );
+    }
+
+    /**
      * Get evaluations for a project
      */
     @Get('project/:projectId')

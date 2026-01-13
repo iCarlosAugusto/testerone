@@ -170,18 +170,27 @@ enum QuestionType {
 }
 
 model EvaluationParticipant {
-  id           String     @id @default(uuid())
-  evaluationId String     @map("evaluation_id")
-  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
-  userId       String     @map("user_id")
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  joinedAt     DateTime   @default(now()) @map("joined_at")
-  completedAt  DateTime?  @map("completed_at")
+  id           String            @id @default(uuid())
+  evaluationId String            @map("evaluation_id")
+  evaluation   Evaluation        @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  userId       String            @map("user_id")
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status       ParticipantStatus @default(PENDING)
+  joinedAt     DateTime          @default(now()) @map("joined_at")
+  completedAt  DateTime?         @map("completed_at")
+  rejectedAt   DateTime?         @map("rejected_at")
 
   @@unique([evaluationId, userId])
   @@index([evaluationId])
   @@index([userId])
+  @@index([status])
   @@map("evaluation_participants")
+}
+
+enum ParticipantStatus {
+  PENDING // Joined but not completed
+  ACCEPTED // Completed evaluation
+  REJECTED // Rejected by founder or system
 }
 
 model EvaluationResponse {

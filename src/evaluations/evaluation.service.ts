@@ -284,7 +284,7 @@ export class EvaluationService {
                 })),
             });
 
-            // Mark participation as completed
+            // Mark participation as completed and set status to ACCEPTED
             await tx.evaluationParticipant.update({
                 where: {
                     evaluationId_userId: {
@@ -294,9 +294,102 @@ export class EvaluationService {
                 },
                 data: {
                     completedAt: new Date(),
+                    status: 'ACCEPTED',
                 },
             });
         });
+    }
+
+    /**
+     * List evaluations for a tester with status filtering and counts
+     * Returns evaluations where the tester is a participant
+     */
+    async findTesterEvaluations(
+        context: TenantContext,
+        statusFilter?: 'PENDING' | 'ACCEPTED' | 'REJECTED',
+        options: PaginationOptions = {},
+    ) {
+        if (context.role !== Role.TESTER) {
+            throw new ForbiddenException('This endpoint is for TESTERs only');
+        }
+
+        const { skip = 0, take = 20 } = options;
+
+        // Build where clause for participations
+        const participationWhere: any = {
+            userId: context.userId,
+        };
+
+        if (statusFilter) {
+            participationWhere.status = statusFilter;
+        }
+
+        // Get evaluations with participation status
+        const participations = await this.prisma.evaluationParticipant.findMany({
+            where: participationWhere,
+            skip,
+            take,
+            orderBy: { joinedAt: 'desc' },
+            include: {
+                evaluation: {
+                    include: {
+                        project: {
+                            select: { id: true, name: true },
+                        },
+                        _count: {
+                            select: { questions: true },
+                        },
+                    },
+                },
+            },
+        });
+
+        // Get total count for pagination
+        const total = await this.prisma.evaluationParticipant.count({
+            where: participationWhere,
+        });
+
+        // Get counts for each status
+        const [pendingCount, acceptedCount, rejectedCount] = await Promise.all([
+            this.prisma.evaluationParticipant.count({
+                where: { userId: context.userId, status: 'PENDING' },
+            }),
+            this.prisma.evaluationParticipant.count({
+                where: { userId: context.userId, status: 'ACCEPTED' },
+            }),
+            this.prisma.evaluationParticipant.count({
+                where: { userId: context.userId, status: 'REJECTED' },
+            }),
+        ]);
+
+        // Transform data
+        const data = participations.map((p) => ({
+            id: p.evaluation.id,
+            title: p.evaluation.title,
+            description: p.evaluation.description,
+            status: p.evaluation.status,
+            project: p.evaluation.project,
+            questionCount: p.evaluation._count.questions,
+            participationStatus: p.status,
+            joinedAt: p.joinedAt,
+            completedAt: p.completedAt,
+            rejectedAt: p.rejectedAt,
+        }));
+
+        return {
+            data,
+            meta: {
+                total,
+                skip,
+                take,
+                hasMore: skip + take < total,
+            },
+            counts: {
+                pending: pendingCount,
+                accepted: acceptedCount,
+                rejected: rejectedCount,
+            },
+        };
     }
 
     /**
