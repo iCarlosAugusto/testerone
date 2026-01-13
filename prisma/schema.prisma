@@ -13,12 +13,13 @@ enum Role {
 }
 
 model Account {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  users     User[]
-  projects  Project[]
+  id          String       @id @default(uuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  users       User[]
+  projects    Project[]
+  invitations Invitation[]
 }
 
 model User {
@@ -35,9 +36,42 @@ model User {
   createdEvaluations       Evaluation[]            @relation("EvaluationCreator")
   evaluationParticipations EvaluationParticipant[]
   evaluationResponses      EvaluationResponse[]
+  sentInvitations          Invitation[]            @relation("InvitationSender")
 
   @@index([accountId])
   @@map("users")
+}
+
+// ============================================================
+// INVITATION SYSTEM
+// ============================================================
+
+model Invitation {
+  id          String           @id @default(uuid())
+  email       String
+  token       String           @unique
+  status      InvitationStatus @default(PENDING)
+  role        Role             @default(MEMBER) // Role to assign on acceptance
+  accountId   String           @map("account_id")
+  account     Account          @relation(fields: [accountId], references: [id])
+  invitedById String           @map("invited_by_id")
+  invitedBy   User             @relation("InvitationSender", fields: [invitedById], references: [id])
+  expiresAt   DateTime         @map("expires_at")
+  acceptedAt  DateTime?        @map("accepted_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  @@unique([email, accountId, status]) // Prevent duplicate pending invites
+  @@index([token])
+  @@index([email])
+  @@index([accountId])
+  @@map("invitations")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
 }
 
 model Project {

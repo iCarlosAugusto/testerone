@@ -1,0 +1,27 @@
+meta {
+  name: Send Envite
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/invitations
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjlkNjY2MTdjLTQ2M2QtNDllNS04YzMyLWEwMjA2OGQ2NjhkYyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3NlaXdrYXV1a2ZlaHdva2lubHpkLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2ZjZmNWVhMS1mMDgwLTQxMjItOTViMi05NDgwMmZiMDAwZTIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY4MjY3OTgyLCJpYXQiOjE3NjgyNjQzODIsImVtYWlsIjoidGVzdGUyQHRlc3RlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiYWNjb3VudElkIjoiN2Q4YzZlYzUtMzU2Mi00NzBmLTgxZjgtNWMyNDhhOGY3NzAzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGUiOiJGT1VOREVSIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjgyNjQzODJ9XSwic2Vzc2lvbl9pZCI6ImE4MjlkMjU1LWQwMmUtNGZkNS04YmI2LWEzNjA3ZDY2NDgzMyIsImlzX2Fub255bW91cyI6ZmFsc2V9.UbdCccAZdPDZlmrtwPMCAow1RzmvMdjNZMTCuzMZy9FsRtQwqJRufxYFBzg1CCDsqHM2vopAj_AHk8naMpm-iQ
+}
+
+body:json {
+  {
+    "email": "augusto.dev@proton.me",
+    "role": "MEMBER"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

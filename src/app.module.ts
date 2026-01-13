@@ -8,6 +8,7 @@ import { SupabaseModule } from './supabase/supabase.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './projects/project.module';
 import { EvaluationModule } from './evaluations/evaluation.module';
+import { InvitationModule } from './invitations/invitation.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { EvaluationModule } from './evaluations/evaluation.module';
         AuthModule,
         ProjectModule,
         EvaluationModule,
+        InvitationModule,
     ],
     controllers: [AppController],
     providers: [
